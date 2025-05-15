@@ -2,12 +2,9 @@
 #include <vector>
 #include <string>
 
-
 #include "headers.h"
 
-
-
-int main() 
+int main()
 {
     // vector <network> LAN;
     // main_Menu(&LAN);
@@ -27,14 +24,16 @@ int main()
     cout << "\nMASK: ";
     mask.ipToString();
 
-
     subNetwork TESTLAN;
-    ip LAN_net = TESTLAN.network.get();
-    ip LAN_mask = TESTLAN.mask.get();
-    int LAN_no = TESTLAN.n_machines;
+    cout << "Default Constructs: \n
+    -Network: ";
+    TESTLAN.network.ipToString();
+    cout << endl
+         << "-Mask: ";
+    TESTLAN.mask.ipToString();
+    cout << endl
+         << "-host number: ";
+    TESTLAN.n_machines;
 
-
-
-    
     return 0;
 }
