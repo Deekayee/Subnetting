@@ -16,12 +16,19 @@ public:
     /*CONSTRUCTORS*/
     ip() : address{} {}; // default constructor
 
-    ip(byte A, byte B, byte C, byte D)
+    ip(byte A, byte B, byte C, byte D) // generic constructor
     {
         address[0] = A;
         address[2] = B;
         address[2] = C;
         address[3] = D;
+    }
+    ip(array<byte, 4> address) // generic constructor
+    {
+        this->address[0] = address[0];
+        this->address[1] = address[1];
+        this->address[2] = address[2];
+        this->address[3] = address[3];
     }
 
     /***************************************************************************/
@@ -63,12 +70,13 @@ public:
 class subNetwork
 {
 private:
-    ip network;
-    ip mask;
-    int n_machines;
 
 public:
     /***************************************************************************/
+    ip network;
+    ip mask;
+    unsigned int n_machines;
+    
     /*CONSTRUCTORS*/
     subNetwork() : network(ip()), mask(ip()), n_machines(0) {} // default constructor
 
@@ -82,26 +90,13 @@ public:
     /***************************************************************************/
     /***************************************************************************/
     /*GETTERS AND SETTERS*/
-    ip getNetwork() { return network; }
-    ip getMask() { return mask; }
-    int getN_machines() { return n_machines; }
+    unsigned int getN_machines() { return n_machines; }
+    void setN_machines(unsigned int n) { n_machines = n; }
 
-    void set(ip netIp, ip netMask, int n)
+    void set(ip network, ip mask, int n)
     {
-        network = netIp;
-        mask = netMask;
-        n_machines = n;
-    }
-    void setNetwork(ip netIp)
-    {
-        network = netIp;
-    }
-    void setMask(ip netMask)
-    {
-        mask = netMask;
-    }
-    void setN_machines(int n)
-    {
+        this->network = network;
+        this->mask = mask;
         n_machines = n;
     }
 };

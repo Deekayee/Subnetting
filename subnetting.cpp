@@ -28,6 +28,13 @@ int main()
     mask.ipToString();
 
 
+    subNetwork TESTLAN;
+    ip LAN_net = TESTLAN.network.get();
+    ip LAN_mask = TESTLAN.mask.get();
+    int LAN_no = TESTLAN.n_machines;
+
+
+
     
     return 0;
 }
