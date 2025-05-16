@@ -9,29 +9,16 @@ using namespace std;
 class ip
 {
 private:
-    array<byte, 4> address; // byte -> unsigned char = 1 byte = 8 bits
+    array<byte, 4> address; // byte -> unsigned char = 1 byte = 8 bits, address is made up by 4 bytes!
 
 public:
-    /***************************************************************************/
     /*CONSTRUCTORS*/
-    ip() : address{} {}; // default constructor
+    ip() : address() {}; // default constructor
 
-    ip(byte A, byte B, byte C, byte D) // generic constructor
-    {
-        address[0] = A;
-        address[2] = B;
-        address[2] = C;
-        address[3] = D;
-    }
-    ip(array<byte, 4> address) // generic constructor
-    {
-        this->address[0] = address[0];
-        this->address[1] = address[1];
-        this->address[2] = address[2];
-        this->address[3] = address[3];
-    }
+    // generic constructors
+    ip(byte A, byte B, byte C, byte D) : address{A, B, C, D} {}
+    ip(array<byte, 4> address) : address(address) {}
 
-    /***************************************************************************/
     /*GETTER AND SETTER*/
     array<byte, 4> get() { return address; }
     void set(byte A, byte B, byte C, byte D)
@@ -39,44 +26,40 @@ public:
         address = {A, B, C, D};
     }
 
-    /***************************************************************************/
     /*STRING UTILITY*/
-    void ipToString() const // print in integer format
+    string toString() const // return ip address string in xxx.xxx.xxx.xxx format
     {
-        cout << (int)address[0] << "."
-             << (int)address[1] << "."
-             << (int)address[2] << "."
-             << (int)address[3];
+        stringstream ss;
+        ss << (int)address[0] << "."
+           << (int)address[1] << "."
+           << (int)address[2] << "."
+           << (int)address[3];
+
+        return ss.str();
     }
 
-    void ipFromString(string userInput) // create object from userInput
+    void fromString(string userInput) // create object from userInput
     {
-        string str_byte[4];
+        string str_byte;
         stringstream str_address(userInput);
+        int i = 0;
 
-        // parse the string to an array of bytes
-        getline(str_address, str_byte[0], '.');
-        getline(str_address, str_byte[1], '.');
-        getline(str_address, str_byte[2], '.');
-        getline(str_address, str_byte[3]);
-
-        // convert the bytes to correct format and into ip array
-        address[0] = (byte)stoi(str_byte[0]);
-        address[1] = (byte)stoi(str_byte[1]);
-        address[2] = (byte)stoi(str_byte[2]);
-        address[3] = (byte)stoi(str_byte[3]);
+        while (getline(str_address, str_byte, '.') && i < 4) // parse string to address
+        {
+            address[i++] = static_cast<byte>(stoi(str_byte)); // explicitly cast our int to byte type
+        }
+        
     }
 };
 class subNetwork
 {
 private:
-
 public:
     /***************************************************************************/
     ip network;
     ip mask;
     unsigned int n_machines;
-    
+
     /*CONSTRUCTORS*/
     subNetwork() : network(ip()), mask(ip()), n_machines(0) {} // default constructor
 
