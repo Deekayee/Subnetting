@@ -18,6 +18,7 @@ public:
     // generic constructors
     ip(byte A, byte B, byte C, byte D) : address{A, B, C, D} {}
     ip(array<byte, 4> address) : address(address) {}
+    ip(string stringIp) { fromString(stringIp); }
 
     /*GETTER AND SETTER*/
     array<byte, 4> get() { return address; }
@@ -48,38 +49,68 @@ public:
         {
             address[i++] = static_cast<byte>(stoi(str_byte)); // explicitly cast our int to byte type
         }
-        
     }
 };
 class subNetwork
 {
 private:
-public:
-    /***************************************************************************/
     ip network;
     ip mask;
-    unsigned int n_machines;
+    unsigned int hosts;
 
+public:
     /*CONSTRUCTORS*/
-    subNetwork() : network(ip()), mask(ip()), n_machines(0) {} // default constructor
+    subNetwork() : network(ip()), mask(ip()), hosts(0) {} // default constructor
 
-    subNetwork(ip network, ip mask, int n_machines)
+    subNetwork(ip network, ip mask, int hosts)
     {
         this->network = network;
         this->mask = mask;
-        this->n_machines = n_machines;
+        this->hosts = hosts;
     }
-    /***************************************************************************/
-    /***************************************************************************/
-    /***************************************************************************/
-    /*GETTERS AND SETTERS*/
-    unsigned int getN_machines() { return n_machines; }
-    void setN_machines(unsigned int n) { n_machines = n; }
 
+    /*GETTERS AND SETTERS*/
+    unsigned int getHosts() { return hosts; }
+    ip &getIP() { return network; }
+    ip &getMask() { return mask; }
+
+    void setHosts(unsigned int n) { hosts = n; }
     void set(ip network, ip mask, int n)
     {
         this->network = network;
         this->mask = mask;
-        n_machines = n;
+        hosts = n;
+    }
+};
+
+class NETWORK
+{
+private:
+    vector<subNetwork> LAN;
+
+public:
+    NETWORK() : LAN{subNetwork()} {};
+
+    NETWORK(ip &address, ip &mask) : LAN{subNetwork(address, mask, 0)} {}
+
+    subNetwork &get() { return LAN.at(0); }
+    ip &getIP() { return get().getIP(); }
+    ip &getMask() { return get().getMask(); }
+    unsigned int getTotal() { return get().getHosts(); }
+    
+    vector<subNetwork> &getNetwork() { return LAN; }
+    subNetwork &getLAN(int i)
+    {
+        if (i < LAN.size())
+            return LAN.at(i);
+    }
+
+    void setIP(ip &address, ip &mask, int n) { get().set(address, mask, n); }
+    void setTotal(unsigned int total) { get().setHosts(total); }
+    void addTotal(int addTotal) { setTotal(getTotal() + addTotal); }
+    void addLAN(subNetwork &newLAN)
+    {
+        addTotal(newLAN.getHosts());
+        LAN.push_back(newLAN);
     }
 };

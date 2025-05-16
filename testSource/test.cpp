@@ -2,7 +2,7 @@
 #include <vector>
 #include <string>
 
-#include "headers.h"
+#include "../headers.h"
 
 int main()
 {
@@ -39,24 +39,24 @@ int main()
     subNetwork testLan;
     cout << "Network Default constructor:" << endl;
     cout << "   Network: "
-         << testLan.network.toString();
+         << testLan.getIP().toString();
     cout << endl
          << "   Mask: "
-         << testLan.mask.toString();
+         << testLan.getMask().toString();
     cout << endl
          << "   Host number: "
-         << testLan.n_machines << endl;
+         << testLan.getHosts() << endl;
 
     subNetwork testLan2(ipInput, testIp2, 420);
     cout << "Network constructor:" << endl;
     cout << "   Network: "
-         << testLan2.network.toString();
+         << testLan2.getIP().toString();
     cout << endl
          << "   Mask: "
-         << testLan2.mask.toString();
+         << testLan2.getMask().toString();
     cout << endl
          << "   Host number: "
-         << testLan2.n_machines;
+         << testLan2.getHosts();
 
 
     return 0;
