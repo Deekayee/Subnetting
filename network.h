@@ -1,8 +1,10 @@
 #include <array>
 #include <iostream>
 #include <sstream>
+#include <bitset>
 
 #define byte unsigned char
+#define BITSIZE 32
 
 using namespace std;
 
@@ -13,18 +15,75 @@ private:
 
 public:
     /*CONSTRUCTORS*/
+    //-default
+    //-by bytes
+    //-by existing address
+    //-mask constructor
     ip() : address() {}; // default constructor
 
     // generic constructors
     ip(byte A, byte B, byte C, byte D) : address{A, B, C, D} {}
     ip(array<byte, 4> address) : address(address) {}
     ip(string stringIp) { fromString(stringIp); }
+    ip(unsigned int mask) // takes mask in /n format
+    {
+        int j = 0;
+        for (int i = 0; i < BITSIZE; i += 4)
+        {
+            string bits = "";
+            for (int k = 0; k < 4; ++k)
+            {
+                bits += (i + k < mask) ? '1' : '0'; // chatgpted, ? checks previous condition, will output first option if true, if false second option
+            }
+            bitset<4> bitByte(bits);
+            address[j++] = static_cast<byte>(bitByte.to_ulong());
+        }
+    }
+
+    /*BIT UTILITY*/
+    bitset<BITSIZE> toBitset() // return bit array
+    {
+        string str;
+        for (byte B : address)
+        {
+            bitset<8> bits(B);
+            str += bits.to_string();
+        }
+        return bitset<BITSIZE>(str);
+    }
+
+    void fromBitset(bitset<BITSIZE> bits) // write address from bit array
+    {
+        string str;
+        for (int i = 0; i < BITSIZE; i += 4)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                str += bits[i + j];
+            }
+            address[i / 4] = static_cast<byte>(stoi(str, nullptr, 2));
+            str = "";
+        }
+    }
 
     /*GETTER AND SETTER*/
     array<byte, 4> get() { return address; }
-    void set(byte A, byte B, byte C, byte D)
+    int getMask()   //will count number of bits if dealing with a mask
     {
-        address = {A, B, C, D};
+        int count = 0;
+        bitset<BITSIZE> bits = this->toBitset();
+        for (int i = bits.size() - 1; i >= 0; --i)
+        {
+            if (bits[i])
+                count++;
+            else
+                break;
+        }
+        return count;
+    }
+    void set(array<byte, 4> address)
+    {
+        this->address = address;
     }
 
     /*STRING UTILITY*/
@@ -49,6 +108,11 @@ public:
         {
             address[i++] = static_cast<byte>(stoi(str_byte)); // explicitly cast our int to byte type
         }
+    }
+    void jump(int pos) // will increment ip at specific position from the BITSIZE bits
+    {
+
+        address[3 - pos / 8] += (1 << (pos % 8));
     }
 };
 class subNetwork
@@ -97,7 +161,7 @@ public:
     ip &getIP() { return get().getIP(); }
     ip &getMask() { return get().getMask(); }
     unsigned int getTotal() { return get().getHosts(); }
-    
+
     vector<subNetwork> &getNetwork() { return LAN; }
     subNetwork &getLAN(int i)
     {

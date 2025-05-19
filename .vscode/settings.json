@@ -13,6 +13,8 @@
         "xlocnum": "cpp",
         "xloctime": "cpp",
         "xutility": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "iosfwd": "cpp",
+        "bitset": "cpp"
     }
 }
